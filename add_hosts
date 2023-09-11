@@ -1,0 +1,31 @@
+#Script para adicionar sites ou ips no arquivo Hosts do Windows
+import ctypes
+import sys
+import os
+
+# Endereços IP e nomes dos hosts a serem adicionados
+hosts = [
+    {"ip": "x.x.x.x", "name": "nome site"},
+    {"ip": "x.x.x.x", "name": "nome site"},
+        ]
+
+# Verifica se o script está sendo executado como administrador
+if not ctypes.windll.shell32.IsUserAnAdmin():
+    # Se não estiver sendo executado como administrador, reinicia o script como administrador
+    ctypes.windll.shell32.ShellExecuteW(
+        None, "runas", sys.executable, __file__, None, 1)
+    sys.exit()
+
+# Adiciona os endereços IP e nomes dos hosts ao arquivo hosts
+with open(r"C:\Windows\System32\drivers\etc\hosts", "a") as hosts_file:
+    for host in hosts:
+        hosts_file.write(f"\n{host['ip']} {host['name']}")
+
+        # Caminho para o arquivo hosts do Windows
+hosts_path = "C:\\Windows\\System32\\drivers\\etc\\hosts"
+
+# Abre o arquivo hosts no bloco de notas
+os.system("notepad.exe " + hosts_path)
+
+# Exibe uma mensagem para o usuário
+print("As informações foram adicionadas ao arquivo hosts com sucesso!")
